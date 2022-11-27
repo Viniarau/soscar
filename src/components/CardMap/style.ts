@@ -169,6 +169,7 @@ export const TextSubTitleInfo = styled.Text`
 `;
 
 export const ButtonCancel = styled.View`
+    flex-direction: row;
     width: 311px;
     height: 45px;
     backgroundColor: #242E42;
@@ -181,4 +182,5 @@ export const TextButtonCancel = styled.Text`
     fontSize: 17px;
     lineHeight: 20px; 
     color: #fff;
+    padding-right: 10px;
 `;

@@ -2,46 +2,81 @@ import React, { useRef, useState } from 'react';
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
 import CardMap from '../../components/CardMap';
+import CardNewRequest from '../../components/CardNewRequest';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Container, ContainerExit, TextExit } from './style';
 import { googleApi } from '../../constants';
 
-export type Props = {
-    name: string;
-  };
+const mock = {
+    mockUser: { 
+        nameUser: 'João Vitor', 
+        avaliationUser: '4.9'
+    },
+    mockAddres: {
+        addresStart: 'Av. Babita Camargos, 1725 - Cidade Industrial, Contagem',
+        addresFinish: 'R. Zircônio, 500 - Vila Magnesita, BH',
+    },
+    mockLocationCurrent: {
+        latitude: -19.939652, 
+        longitude: -44.0148176
+    },
+    mockLocationVehicle: {
+        latitude: -19.9487019, 
+        longitude: -44.0258042
+    },
+    mockDefaultLocation: {
+        latitude: 0.000000, 
+        longitude: 0.000000,
+        laDelta: 100,
+        loDelta: 100
+    }
+}
 
-const mockLocationCurrent = {latitude: -19.939652, longitude: -44.0148176};
-const mockLocationVehicle = {latitude: -19.9487019, longitude: -44.0258042};
+const Home: React.FC = () => {
+    const [showCard, setShowCard] = useState<boolean>(false);
+    const [distance, setDistance] = useState<number>(null);
+    const [duration, setDuration] = useState<number>(null);
+    const [currentPosition, setCurrentPosition] = useState({latitude: 0.000000, longitude: 0.000000});
+    const [vehiclePosition, setVehiclePosition] = useState({latitude: 0.000000, longitude: 0.000000});
+    const [laDelta, setLaDelta] = useState<number>(100);
+    const [loDelta, setLoDelta] = useState<number>(100);
 
-const Home: React.FC<Props> = () => {
-    const [distance, setDistance] = useState(null);
-    const [duration, setDuration] = useState(null);
     const mapEl = useRef(null);
 
-    const currentPosition = mockLocationCurrent;
-    const vehiclePosition = mockLocationVehicle;
+    const setLocation = async () => {
+        await setCurrentPosition(mock.mockLocationCurrent);
+        await setVehiclePosition(mock.mockLocationVehicle);
+        await setLaDelta(0.00999);
+        await setLoDelta(0.00444);
+    };
+
+    const setClearLocation = async () => {
+        await setCurrentPosition({latitude: 0, longitude: 0});
+        await setVehiclePosition({latitude: 0, longitude: 0});
+        await setLaDelta(100);
+        await setLoDelta(100);
+    };
 
     return (
         <Container>
-            <ContainerExit>
+            {/*<ContainerExit>
                 <TextExit>
                     {'X'}
                 </TextExit>
-            </ContainerExit>
+            </ContainerExit> */}
             <MapView
                 provider={PROVIDER_GOOGLE}
-                style={
-                    {height: '100%',
-                    width: '100%',
-                }}
+                style={{height: '100%', width: '100%',}}
                 initialRegion={{
-                latitude: currentPosition.latitude,
-                longitude: currentPosition.longitude,
-                latitudeDelta: 0.00999,
-                longitudeDelta: 0.00444,
+                latitude: currentPosition.latitude ? currentPosition.latitude : mock.mockDefaultLocation.latitude,
+                longitude: currentPosition.longitude ? currentPosition.longitude : mock.mockDefaultLocation.longitude,
+                latitudeDelta: laDelta,
+                longitudeDelta: loDelta,
                 }}
                 ref={mapEl}
             >
+            {currentPosition.latitude !== 0 && (
+                <>
                 <Marker
                     key={1}
                     pinColor={"red"}
@@ -56,9 +91,7 @@ const Home: React.FC<Props> = () => {
                     title={'Reboque'}
                     description={'ABC-123'}
                 >
-                   
-                    <Ionicons name="car" size={35} color="#4CE5B1" />
-                    
+                    <Ionicons name="car" size={35} color="#4CE5B1" />              
                 </Marker> 
                 <MapViewDirections
                     origin={{latitude: currentPosition.latitude, longitude: currentPosition.longitude }}
@@ -82,8 +115,29 @@ const Home: React.FC<Props> = () => {
                         )
                     }}
                 />
+                </>
+            )}
             </ MapView>
-            <CardMap data={{distance: distance, duration: duration}} />
+            {showCard ? (
+                <CardMap 
+                    distance={distance}
+                    duration={duration}
+                    user={mock.mockUser}
+                    addres={mock.mockAddres}
+                    cancelRequest={(bool: boolean) => {
+                        setClearLocation();
+                        setShowCard(bool);
+                    }} />
+            ): (
+                <CardNewRequest 
+                    start={mock.mockAddres.addresStart} 
+                    finish={mock.mockAddres.addresFinish} 
+                    startRequest={(bool: boolean) => {
+                        setLocation();
+                        setShowCard(bool);
+                }} />
+            )}
+
         </Container>
     )
 }

@@ -1,5 +1,5 @@
-import React, { useRef, useState } from 'react';
-import { Image } from 'react-native';
+import React, { Dispatch, SetStateAction, useRef, useState } from 'react';
+import { ActivityIndicator, Image } from 'react-native';
 import { 
     Container,
     ContainerTop,
@@ -27,7 +27,26 @@ import {
 } from './style';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
-const CardMap = (data: any) => {
+type userProps = {
+    nameUser: string;
+    avaliationUser: string;
+};
+
+type addresProps = {
+    addresStart: string;
+    addresFinish: string;
+};
+
+export type DataProps = {
+    user: userProps;
+    addres: addresProps;
+    distance: number;
+    duration: number;
+    cancelRequest: Dispatch<SetStateAction<boolean>>;
+  };
+
+const CardMap = ({user, addres, distance, duration, cancelRequest}: DataProps) => {
+    const [showActivity, setShowActivity] = useState<boolean>(false);
 
     return (
         <Container>
@@ -38,21 +57,21 @@ const CardMap = (data: any) => {
                     </Photo>
                     <ContainerName>
                         <TextName>
-                            Gregory Smith
+                            {user.nameUser}
                         </TextName>
                         <ContainerAvaliation>
                             <Image source={require('../../assets/image/shape.png')} />
                             <TextAvaliation>
-                                4.9
+                                {user.avaliationUser}
                             </TextAvaliation>
                         </ContainerAvaliation>
                     </ContainerName>
                 </ContainerLeft>
                 <ContainerIcons>
-                    <ContainerIconMessage color={'##4CE5B1'}>
+                    <ContainerIconMessage>
                         <Ionicons name="ios-chatbubble" size={28} color="#fff" />
                     </ContainerIconMessage>
-                    <ContainerIconCall color={'#4252FF'}>
+                    <ContainerIconCall>
                         <Ionicons name="call" size={28} color="#fff" />
                     </ContainerIconCall>
                 </ContainerIcons>
@@ -63,13 +82,13 @@ const CardMap = (data: any) => {
                         <IconMarkerInternal />
                     </IconMarkerDefault>
                     <TextLocation>
-                        {'Av. Babita Camargos, 1725 - Cidade Industrial, Contagem'}
+                        {addres.addresStart}
                     </TextLocation>
                 </ContainerMatch> 
                 <ContainerCurrent>
                     <Ionicons name="pin" size={20} color="#F52D56" />
                     <TextLocation>
-                        {'R. Zircônio, 500 - Vila Magnesita, BH'}
+                        {addres.addresFinish}
                     </TextLocation>
                 </ContainerCurrent>
             </ContainerLocation>
@@ -80,7 +99,7 @@ const CardMap = (data: any) => {
                         {'DISTANCE'}
                     </TextTitleInfo>
                     <TextSubTitleInfo>
-                        {data.data.distance?.toFixed(2)}km
+                        {distance?.toFixed(2)}km
                     </TextSubTitleInfo>
                 </ContainerInfoInternal>
                 <ContainerInfoInternal>
@@ -88,7 +107,7 @@ const CardMap = (data: any) => {
                         {'TIME'}
                     </TextTitleInfo>
                     <TextSubTitleInfo>
-                        {data?.data.duration?.toFixed(0)}min
+                        {duration?.toFixed(0)}min
                     </TextSubTitleInfo>
                 </ContainerInfoInternal>
                 <ContainerInfoInternal>
@@ -100,10 +119,19 @@ const CardMap = (data: any) => {
                     </TextSubTitleInfo>
                 </ContainerInfoInternal>
             </ContainerInfo>
-           <ButtonCancel>
+           <ButtonCancel onTouchStart={() => {
+                   setShowActivity(true);
+                   setTimeout(() => {
+                        setShowActivity(false);
+                        cancelRequest(false);
+                    }, 2000)
+                   }}>
                <TextButtonCancel>
                     Cancel Request
                </TextButtonCancel>
+               {showActivity && (
+                    <ActivityIndicator size="small" color="#fff" />
+               )}
            </ButtonCancel>
         </Container>
     )

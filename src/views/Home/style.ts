@@ -20,6 +20,6 @@ export const ContainerExit = styled.View`
 `;
 
 export const TextExit = styled.Text`
-    font-size: 40px
+    font-size: 35px
     color: #C1C0C9;
 `;
