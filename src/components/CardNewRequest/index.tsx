@@ -5,8 +5,6 @@ import {
     ButtonCancel,
     TextButtonCancel,
     ContainerInput,
-    IconMarkerDefault,
-    IconMarkerInternal,
     Input,
 } from './style';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -22,12 +20,6 @@ const CardNewRequest = ({start, finish, startRequest}: DataProps) => {
 
     return (
     <Container>
-        <ContainerInput>
-            <IconMarkerDefault>
-                <IconMarkerInternal />
-            </IconMarkerDefault>
-            <Input value={start} placeholder="" placeholderTextColor="gray" />
-        </ ContainerInput>
         <ContainerInput>
             <Ionicons name="pin" size={20} color="#F52D56" />
             <Input value={finish} placeholder="" placeholderTextColor="gray" />

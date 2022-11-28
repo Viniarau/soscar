@@ -2,7 +2,7 @@ import styled from 'styled-components/native';
 
 export const Container = styled.View`
     position: absolute; 
-    height: 170px;
+    height: 150px;
     width: 343px;
     borderRadius: 8px;
     backgroundColor: #FFF;
@@ -15,27 +15,6 @@ export const Container = styled.View`
 
 export const ContainerInput = styled.View`
     flex-direction: row;
-    align-items: center;
-    justify-content: center;
-`;
-
-export const IconMarkerDefault = styled.View`
-    width: 18px;
-    height: 18px;
-    backgroundColor: #fff;
-    border-width: 2px;
-    border-color: #4CE5B1;
-    borderRadius: 20px;
-    align-items: center;
-    justify-content: center;
-`;
-
-export const IconMarkerInternal = styled.View`
-    display: flex;
-    width: 10.5px;
-    height: 10.5px;
-    backgroundColor: #4CE5B1;
-    borderRadius: 20px;
     align-items: center;
     justify-content: center;
 `;

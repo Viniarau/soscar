@@ -1,10 +1,11 @@
-import React, { useRef, useState } from 'react';
+import React, { useContext, useRef, useState } from 'react';
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
 import CardMap from '../../components/CardMap';
 import CardNewRequest from '../../components/CardNewRequest';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { Container, ContainerExit, TextExit } from './style';
+import { Container } from './style';
+import Context from '../../context';
 import { googleApi } from '../../constants';
 
 const mock = {
@@ -33,6 +34,7 @@ const mock = {
 }
 
 const Home: React.FC = () => {
+    const keyGoogleMaps = useContext(Context);
     const [showCard, setShowCard] = useState<boolean>(false);
     const [distance, setDistance] = useState<number>(null);
     const [duration, setDuration] = useState<number>(null);
@@ -96,7 +98,7 @@ const Home: React.FC = () => {
                 <MapViewDirections
                     origin={{latitude: currentPosition.latitude, longitude: currentPosition.longitude }}
                     destination={{latitude: vehiclePosition.latitude, longitude: vehiclePosition.longitude }}
-                    apikey={googleApi}
+                    apikey={keyGoogleMaps}
                     strokeWidth={4}
                     strokeColor={'blue'}
                     onReady={result => {
